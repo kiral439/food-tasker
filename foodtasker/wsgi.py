@@ -14,6 +14,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodtasker.settings')
 
 # Use whitenoise package to serve static files on Heroku
-from whitenoise.django import DjangoWhiteNoise
+# from whitenoise.django import DjangoWhiteNoise
 
-application = DjangoWhiteNoise(get_wsgi_application())
+# application = DjangoWhiteNoise(get_wsgi_application())
