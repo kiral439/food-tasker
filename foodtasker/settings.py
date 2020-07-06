@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'foodtasker.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
