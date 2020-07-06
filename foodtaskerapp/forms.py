@@ -15,3 +15,17 @@ class RestaurantForm(forms.ModelForm):
     class Meta:
         model = Restaurant
         fields = ("name", "phone", "address", "logo")
+
+# vue.js - frontend
+    # form elements
+    # http://localhost/api/v1/sign-up   /POST - data/ -> backend
+    # status(200, 400) -> 200 - registered successfully...  -   400 - echo message
+
+# android app
+    # http://localhost/api/v1/sign-up   /POST - data/ -> backend
+
+# django - backend
+    # receive - http://localhost/api/v1/sign-up   /POST - data/  -> db, status(400, message) -> frontend
+
+#db - postgresql
+
