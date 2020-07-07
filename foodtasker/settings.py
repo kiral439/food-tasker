@@ -25,7 +25,7 @@ SECRET_KEY = 'qs_j#951qw4t9w^d(h1q7f$4!y8quncsd$*jfo3y7hzg*ut8wu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['evening-badlands-69565.herokuapp.com']
 
 
 # Application definition
@@ -122,7 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
-STATIC_URL = '/static/'
+STATIC_URL = STATIC_HOST + '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
