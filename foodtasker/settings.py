@@ -124,9 +124,9 @@ USE_TZ = True
 STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../foodtaskerapp/static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, '../foodtaskerapp/static'),
+# )
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
