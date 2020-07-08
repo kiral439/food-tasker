@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from foodtaskerapp.models import Restaurant
+from foodtaskerapp.models import Restaurant, Customer, Driver, Meal
 # Register your models here.
 
 admin.site.register(Restaurant)
+admin.site.register(Customer)
+admin.site.register(Driver)
+admin.site.register(Meal)
