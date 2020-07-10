@@ -1,4 +1,6 @@
 {% extends 'base_signup.html' %}
+{% load socialaccount %}
+{% providers_media_js %}
 {% load bootstrap4 %}
 
 {% block title %} Sign In {% endblock %}
@@ -10,6 +12,10 @@
         {% csrf_token %}
         {% bootstrap_form form %}
         <button type="submit" class="btn btn-pink float-right">Sign In</button>
+        {{user}}
+        <br>
+        <a href="{% provider_login_url 'google' %}">Google Login</a> -
+        <a href="{% provider_login_url 'facebook' method='js_sdk' %}">Facebook Login</a>
     </form>
     <a href="{% url 'restaurant-sign-up' %}">Become a Restaurant</a>
 {% endblock %}

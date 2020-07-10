@@ -7,6 +7,10 @@ body{
     background-color: #3F3F63;
 }
 
+.bg-gray{
+    background-color: #88A1B2;
+}
+
 .text-white{
     color: white;
 }
@@ -31,7 +35,7 @@ body{
 }
 
 .sticky-top{
-    padding: 20px 0 0 0 !important;
+    padding: 30px 0 0 0 !important;
 }
 /*Side bar - Header*/
  .sticky-sidebar > div:first-child{
@@ -109,4 +113,14 @@ body{
 
 .content .card{
     border: none;
+}
+
+.table thead tr th,
+.table thead tr td{
+    vertical-align: middle;
+}
+
+.table,
+.table thead tr th{
+    border-color: #80A1B2
 }

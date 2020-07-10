@@ -1,7 +1,7 @@
 from django import forms
 
 from django.contrib.auth.models import User
-from foodtaskerapp.models import Restaurant
+from foodtaskerapp.models import Restaurant, Meal
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(max_length=100, required=True)
@@ -23,19 +23,7 @@ class RestaurantForm(forms.ModelForm):
         model = Restaurant
         fields = ("name", "phone", "address", "logo")
 
-
-
-
-# vue.js - frontend
-    # form elements
-    # http://localhost/api/v1/sign-up   /POST - data/ -> backend
-    # status(200, 400) -> 200 - registered successfully...  -   400 - echo message
-
-# android app
-    # http://localhost/api/v1/sign-up   /POST - data/ -> backend
-
-# django - backend
-    # receive - http://localhost/api/v1/sign-up   /POST - data/  -> db, status(400, message) -> frontend
-
-#db - postgresql
-
+class MealForm(forms.ModelForm):
+    class Meta:
+        model = Meal
+        exclude = ('restaurant',)
