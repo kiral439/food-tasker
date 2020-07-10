@@ -25,8 +25,8 @@ SECRET_KEY = 'qs_j#951qw4t9w^d(h1q7f$4!y8quncsd$*jfo3y7hzg*ut8wu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['evening-badlands-69565.herokuapp.com', '127.0.0.1']
-# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['evening-badlands-69565.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 

@@ -42,14 +42,20 @@ urlpatterns = [
     path('accounts/',include('allauth.urls')),
     # Facebook - Sign In/Sign Up/Sign Out
     path('api/social/', include('rest_framework_social_oauth2.urls')),
+    # API for restaurant new order notification
     path('api/restaurant/order/notification/<str:last_viewed>/', apis.restaurant_order_notification),
-    # path('api/restaurant/order/notification/', apis.restaurant_order_notification),
-    #     convert-token(sign in/sign up)
-    #     revoke-token(sign out)
 
     # APIs for CUSTOMERS
     path('api/customer/restaurants/', apis.customer_get_restaurants),
     path('api/customer/meals/<int:restaurant_id>', apis.customer_get_meals),
     path('api/customer/order/add/', apis.customer_add_order),
     path('api/customer/order/latest/', apis.customer_get_latest_order),
+
+    # APIs for DRIVERS
+    path('api/driver/orders/ready/', apis.driver_get_ready_orders),
+    path('api/driver/order/pick/', apis.driver_pick_order),
+    path('api/driver/order/latest/', apis.driver_get_latest_order),
+    path('api/driver/order/complete/', apis.driver_complete_order),
+    path('api/driver/revenue/', apis.driver_get_revenue),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,7 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from oauth2_provider.models import AccessToken
 
 from .models import Restaurant, Meal, Order, OrderDetails
-from .serializers import RestaurantSerializer, MealSerializer
+from .serializers import RestaurantSerializer, MealSerializer, OrderSerializer
+
+###############
+# CUSTOMERS
+###############
 
 def customer_get_restaurants(request):
     restaurant = RestaurantSerializer(
@@ -85,7 +89,20 @@ def customer_add_order(request):
             return JsonResponse({"status": "success"})
 
 def customer_get_latest_order(request):
-    return JsonResponse({})
+    access_token = AccessToken.objects.get(
+        token = request.GET.get("access_token"),
+        expires__gt = timezone.now()
+    )
+    customer = access_token.user.customer
+    order = OrderSerializer(Order.objects.filter(customer = customer).last()).data
+
+    return JsonResponse({"order": order})
+
+
+###############
+# RESTAURANTS
+###############
+
 
 def restaurant_order_notification(request, last_viewed):
     notification = Order.objects.filter(
@@ -94,3 +111,28 @@ def restaurant_order_notification(request, last_viewed):
     ).count()
 
     return JsonResponse({"notification": notification})
+
+###############
+# DRIVERS
+###############
+
+def driver_get_ready_orders(request):
+    orders = OrderSerializer(
+        Order.objects.filter(status = Order.READY, driver = None).order_by("-id"),
+        many = True,
+    ).data
+
+    return JsonResponse({"orders": orders})
+
+def driver_pick_order(request):
+    return JsonResponse({})
+
+def driver_get_latest_order(request):
+    return JsonResponse({})
+
+def driver_complete_order(request):
+    return JsonResponse({})
+
+def driver_get_revenue(request):
+    return JsonResponse({})
+
