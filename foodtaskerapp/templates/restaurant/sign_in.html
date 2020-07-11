@@ -15,7 +15,7 @@
         {{user}}
         <br>
         <a href="{% provider_login_url 'google' %}">Google Login</a> -
-        <a href="{% provider_login_url 'facebook' method='js_sdk' %}">Facebook Login</a>
+        <a href="{% url 'social:begin' 'facebook' %}">Facebook Login</a>
     </form>
     <a href="{% url 'restaurant-sign-up' %}">Become a Restaurant</a>
 {% endblock %}

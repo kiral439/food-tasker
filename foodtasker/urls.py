@@ -42,6 +42,7 @@ urlpatterns = [
     path('accounts/',include('allauth.urls')),
     # Facebook - Sign In/Sign Up/Sign Out
     path('api/social/', include('rest_framework_social_oauth2.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
     # API for restaurant new order notification
     path('api/restaurant/order/notification/<str:last_viewed>/', apis.restaurant_order_notification),
 

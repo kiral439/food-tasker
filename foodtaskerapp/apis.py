@@ -124,7 +124,12 @@ def driver_get_ready_orders(request):
 
     return JsonResponse({"orders": orders})
 
+# POST
+# params: access_token, order_id
+@csrf_exempt
 def driver_pick_order(request):
+    
+
     return JsonResponse({})
 
 def driver_get_latest_order(request):
