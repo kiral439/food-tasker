@@ -1,7 +1,9 @@
 {
-	"folders": [{
-		"path": "."
-	}],
+	"folders": [
+		{
+			"path": "."
+		}
+	],
 	"settings": {
 		"python.pythonPath": "c:\\Users\\Shaxzod\\Downloads\\foodtasker\\myvenv\\Scripts\\python.exe",
 		"files.exclude": {
@@ -15,14 +17,11 @@
 			"**/*.code-workspace": true,
 			"**/__pycache__/": true,
 		},
-
-		"editor.formatOnPaste": true,
-		"editor.formatOnSave": true,
 		"python.formatting.provider": "autopep8",
 		"python.formatting.autopep8Path": "c:\\Users\\Shaxzod\\Downloads\\foodtasker\\myvenv\\Scripts\\autopep8.exe",
 		"python.formatting.autopep8Args": [
 			"--max-line-length",
-			"70",
+			"100",
 			"--aggressive",
 		],
 		"python.linting.lintOnSave": true,
@@ -38,6 +37,13 @@
 		"[python]": {
 			"editor.tabSize": 4
 		},
+		"workbench.colorTheme": "One Dark Pro",
+		"workbench.preferredDarkColorTheme": "One Dark Pro",
+		"workbench.iconTheme": "material-icon-theme",
+		"workbench.colorCustomizations": {
+			"tab.activeBackground": "#282c34",
+			"activityBar.background": "#282c34",
+			"sideBar.background": "#282c34"
+		},
 	},
-
 }

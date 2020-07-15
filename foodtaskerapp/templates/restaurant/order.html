@@ -41,7 +41,7 @@
                             <button class="btn btn-success">Ready</button>
                         </form>
                         {% endif %}
-                        {% if order.status == 2 %}
+                        <!-- {% if order.status == 2 %}
                         <form method="POST">
                             {% csrf_token %}
                             <input name="id" value="{{ order.id }}" hidden>
@@ -57,7 +57,7 @@
                         {% endif %}
                         {% if order.status == 4 %}
                         No Action
-                        {% endif %}
+                        {% endif %} -->
                     </td>
                 </tr>
                 {% endfor %}
