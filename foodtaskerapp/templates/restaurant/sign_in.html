@@ -6,19 +6,18 @@
 {% block heading %} Restaurant - Sign In {% endblock %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {% bootstrap_form form %}
+<form method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
 
-        <button type="submit" class="btn btn-pink float-right">Sign In</button>
-        {{user.get_full_name}}
-        -
-        {{ asset }}
-        <br>
-        <a href="{% url 'socialAuth:begin' 'google-oauth2' %}">Google Login</a> -
-        <a href="{% url 'socialAuth:begin' 'github' %}">Github Login</a> -
-        <a href="{% url 'socialAuth:begin' 'facebook' %}">Facebook Login</a>
-        <a href="{% url 'socialAuth:begin' 'facebook' %}">Facebook Login</a>
-    </form>
-    <a href="{% url 'restaurant-sign-up' %}">Become a Restaurant</a>
+    <button type="submit" class="btn btn-pink float-right">Sign In</button>
+    {{user.get_full_name}}
+    -
+    {{ asset }}
+    <br>
+    <a href="{% url 'socialAuth:begin' 'google-oauth2' %}">Google Login</a> -
+    <a href="{% url 'socialAuth:begin' 'github' %}">Github Login</a> -
+    <a href="{% url 'socialAuth:begin' 'facebook' %}">Facebook Login</a>
+</form>
+<a href="{% url 'restaurant-sign-up' %}">Become a Restaurant</a>
 {% endblock %}

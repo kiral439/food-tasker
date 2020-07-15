@@ -131,3 +131,74 @@ body {
 .table thead tr th {
     border-color: #80A1B2
 }
+
+
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media
+	  only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    tr {
+      margin: 0 0 1rem 0;
+    }
+      
+    tr:nth-child(odd) {
+      background: #ccc;
+    }
+    
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50% !important;
+		}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 0;
+			left: 6px;
+            width: 45%;
+            padding: .75rem;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+		.order-table td:nth-of-type(1):before { content: "Id"; }
+		.order-table td:nth-of-type(2):before { content: "Order Details"; }
+		.order-table td:nth-of-type(3):before { content: "Customer"; }
+		.order-table td:nth-of-type(4):before { content: "Driver"; }
+		.order-table td:nth-of-type(5):before { content: "Total"; }
+		.order-table td:nth-of-type(6):before { content: "Status"; }
+        .order-table td:nth-of-type(7):before { content: "Action"; }
+        tr td:first-child{
+           border-color: #80A1B2;
+        }
+
+        .meal-table td:nth-of-type(1):before { content: "Id"; }
+		.meal-table td:nth-of-type(2):before { content: "Name"; }
+		.meal-table td:nth-of-type(3):before { content: "Short Description"; }
+		.meal-table td:nth-of-type(4):before { content: "Price"; }
+        .meal-table td:nth-of-type(5):before { content: "Image"; text-align: left;}
+        .meal-table td{text-align: left !important;}
+	}
