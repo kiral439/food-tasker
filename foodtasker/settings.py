@@ -10,14 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+import dj_database_url
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# Build paths inside the project like this: os.path.join(BASE_DIR,
+# ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+# See
+# https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'qs_j#951qw4t9w^d(h1q7f$4!y8quncsd$*jfo3y7hzg*ut8wu'
@@ -27,7 +30,6 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['evening-badlands-69565.herokuapp.com', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
-
 
 
 # Application definition
@@ -46,12 +48,7 @@ INSTALLED_APPS = [
     'sslserver',
     'bootstrap4',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
 
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
 
     'oauth2_provider',
     'social_django',
@@ -70,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'foodtasker.urls'
@@ -160,71 +158,43 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-import dj_database_url
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 
 AUTHENTICATION_BACKENDS = (
     # Facebook OAuth2
+    'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.github.GithubOAuth2',
     # Google OAuth2
-    # 'social_core.backends.google.GoogleOAuth2',
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
 
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 
 
 )
 
-SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'METHOD': 'js_sdk',
-        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
-        'SCOPE': ['email', 'public_profile'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v7.0',
-    },
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-
 # Facebook configuration
 SOCIAL_AUTH_FACEBOOK_KEY = '598963994090483'
 SOCIAL_AUTH_FACEBOOK_SECRET = '4eca1790f6830d63531051df15fdb089'
+# Google configuration
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '296361253961-2071gn8pk4lp74rag297q5fqtkvo9bjo.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'CLMPCKBjtM8L88ALQa-2XirC'
+# Github configuration
+SOCIAL_AUTH_GITHUB_KEY = '4aa1d9e6957d711e4be8'
+SOCIAL_AUTH_GITHUB_SECRET = '5e1c58151b6984143e6d0db2a026fd7b3dbe3c4a'
 
-#site id
-SITE_ID = 1 # for the dev mode, you need to use localhost's id facebook does not support the name 127.0.0.1:8000#little options for your page's signup.ACCOUNT_EMAIL_REQUIRED=True
-ACCOUNT_USERNAME_REQURIED=True
+# site id
+SITE_ID = 1  # for the dev mode, you need to use localhost's id facebook does not support the name 127.0.0.1:8000#little options for your page's signup.ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_USERNAME_REQURIED = True
 
 # Define SOCIAL_AUTH_FACEBOOK_SCOPE to get extra permissions from Facebook.
-# Email is not sent by default, to get it, you must request the email permission.
+# Email is not sent by default, to get it, you must request the email
+# permission.
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
@@ -233,11 +203,11 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
-    'foodtaskerapp.social_auth_pipeline.restaurant_for_created_user',
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
-    'foodtaskerapp.social_auth_pipeline.create_user_by_type',  # <--- set the path to the function
+    'foodtaskerapp.social_auth_pipeline.create_user_by_type',
+    # <--- set the path to the function
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',

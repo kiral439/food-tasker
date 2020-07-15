@@ -40,6 +40,8 @@ class OrderRestaurantSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "phone", "address")
 
 class OrderDriverSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source="user.get_full_name")
+
     class Meta:
         model = Driver
         fields = ("id", "name", "avatar", "phone", "address")

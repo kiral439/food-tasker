@@ -2,41 +2,46 @@
 {% block title %} Restaurant {% endblock %}
 
 {% block script %}
-    <script>
-         $(document).ready(function(){
-             var now = new Date();
-             setInterval(function(){
-                 $.ajax({
-                     url: '/api/restaurant/order/notification/' + now.toISOString() + '/',
-                     method: 'GET',
-                     success: function(data){
-                         if(data['notification'] === 0){
-                             $('.badge').text('');
-                         }
-                         else{
-                             $('.badge').text(data['notification'])
-                         }
-                     }
+<script>
+    $(document).ready(function () {
+        var now = new Date();
+        setInterval(function () {
+            $.ajax({
+                url: '/api/restaurant/order/notification/' + now.toISOString() + '/',
+                method: 'GET',
+                success: function (data) {
+                    if (data['notification'] === 0) {
+                        $('.badge').text('');
+                    } else {
+                        $('.badge').text(data['notification'])
+                    }
+                }
 
-                 })
-             }, 3000)
-         })
-    </script>
+            })
+        }, 3000)
+    })
+</script>
 {% endblock %}
 
 {% block sidebar %}
 
-    {% url 'restaurant-order' as restaurant_order_url %}
-    {% url 'restaurant-meal' as restaurant_meal_url %}
-    {% url 'restaurant-report' as restaurant_report_url %}
-    {% url 'restaurant-account' as restaurant_account_url %}
+{% url 'restaurant-order' as restaurant_order_url %}
+{% url 'restaurant-meal' as restaurant_meal_url %}
+{% url 'restaurant-report' as restaurant_report_url %}
+{% url 'restaurant-account' as restaurant_account_url %}
 
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<a class="navbar-brand d-sm-none" href="#">{{ request.user.restaurant.name }}</a>
+<div class="collapse navbar-collapse pt-lg-4 pt-md-4 pt-sm-4 pt-0" id="navbarsExampleDefault">
     <div class="text-center pb-4">
         <img class="rounded-circle" src="{{ MEDIA_URL }}{{ request.user.restaurant.logo }}" width="70" height="70">
         <br>
         <br>
         <h4>Hi, {{ request.user.get_full_name }}</h4>
-        <h5>{{ request.user.restaurant.name }}</h5>
+        <h5 class="d-none d-sm-block">{{ request.user.restaurant.name }}</h5>
     </div>
 
     <div class="list-group">
@@ -59,7 +64,8 @@
     </div>
 
     <div class="text-center btn-bg-color-violet">
-        <a href="{% url 'restaurant-sign-out' %}?next={{ request.path }}" class="btn btn-pink">Logout</a>
+        <a href="{% url 'restaurant-sign-out' %}?next={{ request.path }}" class="btn btn-pink p50">Logout</a>
     </div>
+</div>
 
 {% endblock %}
