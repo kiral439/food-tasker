@@ -12,6 +12,25 @@ import stripe
 from foodtasker.settings import STRIPE_API_KEY
 
 ###############
+# RESTAURANTS
+###############
+
+def restaurants_list(request):
+    restaurant = RestaurantSerializer(
+        Restaurant.objects.all().order_by("-id"),
+        many=True,
+        context={"request": request},
+    ).data
+
+    response = JsonResponse({"restaurants": restaurant},)
+    response["Access-Control-Allow-Origin"] = " "
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+
+    return response
+
+###############
 # CUSTOMERS
 ###############
 

@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'social_django',
     'rest_framework_social_oauth2',
-
+    'corsheaders',
 
 
 ]
@@ -62,12 +62,44 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+]
+
+CORS_ORIGIN_ALLOW = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'http://localhost:8000',
+] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://localhost:8080',
+    'http://localhost:8000',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = 'foodtasker.urls'

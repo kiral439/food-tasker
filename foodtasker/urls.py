@@ -79,8 +79,10 @@ urlpatterns = [
             'social_django.urls',
             namespace='socialAuth')),
     # API for restaurant new order notification
-    path('api/restaurant/order/notification/<str:last_viewed>/',
-         apis.restaurant_order_notification),
+    path('api/restaurant/order/notification/<str:last_viewed>/', apis.restaurant_order_notification),
+    
+    # API restaurants
+    path('api/restaurants/', apis.restaurants_list),
 
     # APIs for CUSTOMERS
     path('api/customer/restaurants/', apis.customer_get_restaurants),
