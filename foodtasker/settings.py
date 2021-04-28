@@ -17,7 +17,6 @@ import os
 # ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See
 # https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -30,7 +29,6 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['evening-badlands-69565.herokuapp.com', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -47,23 +45,25 @@ INSTALLED_APPS = [
     'foodtaskerapp',
     'sslserver',
     'bootstrap4',
-
-
-
+    'rest_framework',
+    'rest_framework.authtoken',
     'oauth2_provider',
     'social_django',
     'rest_framework_social_oauth2',
     'corsheaders',
-
+    'debug_toolbar',
+    'djoser',
+    'rest_authtoken'
 
 ]
 
 MIDDLEWARE = [
+    'django_samesite_none.middleware.SameSiteNoneMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -76,11 +76,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
-    'http://localhost:8000',
-] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
+]  # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:8080',
-    'http://localhost:8000',
 ]
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -100,6 +98,8 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'service-token'
+    ''
 ]
 
 ROOT_URLCONF = 'foodtasker.urls'
@@ -125,7 +125,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodtasker.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -136,25 +135,56 @@ DATABASES = {
     }
 }
 
+DJOSER = {
+    'CREATE_SESSION_ON_LOGIN': True,
+    "PERMISSIONS": {
+        "user": ['djoser.permissions.CurrentUserOrAdmin'],
+        "user_registration": ['rest_framework.permissions.AllowAny']
+    },
+    'SERIALIZERS': {
+        'user': 'foodtaskerapp.serializers.UserSerializer',
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
+# rest_authtoken
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
 
+REGISTRATION_ENABLED = True
+SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE_FORCE_ALL = True
+DCS_SESSION_COOKIE_SAMESITE_FORCE_ALL = True
+SESSION_COOKIE_SAMESITE_FORCE_CORE = False
+DCS_SESSION_COOKIE_SAMESITE_FORCE_CORE = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -168,7 +198,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -187,25 +216,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_REDIRECT_URL = '/'
 # AUTH_USER_MODEL = 'LocalUser'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 
 AUTHENTICATION_BACKENDS = (
-    # Facebook OAuth2
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
-    'social_core.backends.instagram.InstagramOAuth2',
-    'social_core.backends.github.GithubOAuth2',
-    # Google OAuth2
-
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-
-
 )
 
 # Facebook configuration
@@ -245,4 +263,4 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-STRIPE_API_KEY = 'sk_test_51H5CrDFQ6aYBNdSThqh2IVuall4lrQcqFTgr7O5lm1QBj64NyAST3SOuvAbrQyklThwbRku0rn12fr2OvVrbjuV3001CfK24zD'
+STRIPE_API_KEY = 'sk_test_51IjmOnHMkZzh2LQOe7IBwJWzFXUeFM4cE7xLWhK8482DTmk4OHOquuNcsyMno096eiWXPXwYj4Dud0AX7wopiR9Z00zjVYe82G'

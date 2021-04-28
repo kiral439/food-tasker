@@ -19,19 +19,45 @@ from django.contrib.auth import views as auth_view
 from django.conf.urls.static import static
 from django.conf import settings
 
-from foodtaskerapp import views, apis
+from foodtaskerapp import views, apis, restaurant_apis, customer_apis, drivers_apis
+from .api import router
 
 urlpatterns = [
+    #Restaurant REST
+    path('api/auth/', include('djoser.urls.authtoken')),
+    path('api/users/', include('djoser.urls.base')),
+    # path('api/v1/', include(router.urls)),
+    path('api/v1/check_roles', apis.check_role),
+    path('api/v1/restaurants/orders', restaurant_apis.OrderView.as_view()),
+    path('api/v1/restaurants/meals', restaurant_apis.MealView.as_view()),
+    path('api/v1/restaurants/me/', restaurant_apis.MeView.as_view()),
+    path('api/v1/restaurant/register/', restaurant_apis.RegisterRestaurant.as_view()),
+    path('api/v1/restaurants/report/<int:id>', restaurant_apis.restaurant_report),
+    path('app', apis.app),
     path('admin/', admin.site.urls),
     path('', views.restaurant_home, name='restaurant-home'),
 
-    # Restaurant
+    #Customer REST
+    path('api/v1/customers/register/', customer_apis.RegisterCustomer.as_view()),
+    path('api/v1/customers/me/', customer_apis.MeView.as_view()),
+    path('api/v1/customers/order/', customer_apis.customer_add_order),
+    path('api/v1/customers/orders/', customer_apis.OrderView.as_view()),
+    path('api/v1/customers/orders/last/', customer_apis.LastOrdersView.as_view()),
+
+    #Driver REST
+    path('api/v1/drivers/register/', drivers_apis.RegisterDriver.as_view()),
+    path('api/v1/drivers/orders/', drivers_apis.OrderView.as_view()),
+    path('api/v1/drivers/complete/', drivers_apis.driver_complete_order),
+    path('api/v1/drivers/revenue/', drivers_apis.driver_get_revenue),
+    path('api/v1/drivers/me/', drivers_apis.MeView.as_view()),
+
+
+                  # Restaurant
     path(
         'restaurant/sign-in/',
         auth_view.LoginView.as_view(
             template_name='restaurant/sign_in.html'),
         name='restaurant-sign-in'),
-    # path('restaurant/sign-out', auth_view.LogoutView.as_view(next_page=settings.LOGIN_REDIRECT_URL), name = 'restaurant-sign-out'),
     path(
         'restaurant/sign-out/',
         auth_view.LogoutView.as_view(
@@ -79,28 +105,28 @@ urlpatterns = [
             'social_django.urls',
             namespace='socialAuth')),
     # API for restaurant new order notification
-    path('api/restaurant/order/notification/<str:last_viewed>/', apis.restaurant_order_notification),
-    
+    path('api/restaurant/order/notification/<str:last_viewed>/', restaurant_apis.restaurant_order_notification),
+
     # API restaurants
-    path('api/restaurants/', apis.restaurants_list),
+    path('api/restaurants/', restaurant_apis.restaurants_list),
 
     # APIs for CUSTOMERS
-    path('api/customer/restaurants/', apis.customer_get_restaurants),
+    path('api/customer/restaurants/', customer_apis.customer_get_restaurants),
     path(
         'api/customer/meals/<int:restaurant_id>',
-        apis.customer_get_meals),
-    path('api/customer/order/add/', apis.customer_add_order),
+        customer_apis.customer_get_meals),
+    path('api/customer/order/add/', customer_apis.customer_add_order),
     path('api/customer/order/latest/',
-         apis.customer_get_latest_order),
+         customer_apis.customer_get_latest_order),
     path('api/customer/driver/location/',
-         apis.customer_get_driver_location),
+         customer_apis.customer_get_driver_location),
 
     # APIs for DRIVERS
-    path('api/driver/orders/ready/', apis.driver_get_ready_orders),
-    path('api/driver/order/pick/', apis.driver_pick_order),
-    path('api/driver/order/latest/', apis.driver_get_latest_order),
-    path('api/driver/order/complete/', apis.driver_complete_order),
-    path('api/driver/revenue/', apis.driver_get_revenue),
-    path('api/driver/location/update/', apis.driver_update_location),
+    path('api/driver/orders/ready/', drivers_apis.driver_get_ready_orders),
+    path('api/driver/order/pick/', drivers_apis.driver_pick_order),
+    path('api/driver/order/latest/', drivers_apis.driver_get_latest_order),
+    path('api/driver/order/complete/', drivers_apis.driver_complete_order),
+    path('api/driver/revenue/', drivers_apis.driver_get_revenue),
+    path('api/driver/location/update/', drivers_apis.driver_update_location),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
