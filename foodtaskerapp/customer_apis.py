@@ -5,7 +5,6 @@ import stripe
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from oauth2_provider.models import AccessToken
 from rest_framework import permissions, status
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
@@ -226,23 +225,3 @@ class LastOrdersView(APIView, PaginationHandlerMixin):
         else:
             serializer = self.serializer_class(instance, many = True)
         return JsonResponse({"orders": serializer.data})
-
-# GET - params: access_token
-
-
-def customer_get_driver_location(request):
-    access_token = AccessToken.objects.get(
-        token = request.GET.get("access_token"),
-        expires__gt = timezone.now()
-    )
-
-    customer = access_token.user.customer
-
-    # Get driver's location related to this customers current order
-    current_order = Order.objects.filter(
-        customer = customer,
-        status = Order.ONTHEWAY
-    ).last()
-    location = current_order.driver.location
-
-    return JsonResponse({"location": location})

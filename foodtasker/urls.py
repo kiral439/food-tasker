@@ -99,7 +99,6 @@ urlpatterns = [
         name='restaurant-report'),
 
     # Facebook - Sign In/Sign Up/Sign Out
-    path('api/social/', include('rest_framework_social_oauth2.urls')),
     path(
         'oauth/',
         include(
@@ -119,15 +118,10 @@ urlpatterns = [
     path('api/customer/order/add/', customer_apis.customer_add_order),
     path('api/customer/order/latest/',
          customer_apis.customer_get_latest_order),
-    path('api/customer/driver/location/',
-         customer_apis.customer_get_driver_location),
 
     # APIs for DRIVERS
     path('api/driver/orders/ready/', drivers_apis.driver_get_ready_orders),
-    path('api/driver/order/pick/', drivers_apis.driver_pick_order),
-    path('api/driver/order/latest/', drivers_apis.driver_get_latest_order),
     path('api/driver/order/complete/', drivers_apis.driver_complete_order),
     path('api/driver/revenue/', drivers_apis.driver_get_revenue),
-    path('api/driver/location/update/', drivers_apis.driver_update_location),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

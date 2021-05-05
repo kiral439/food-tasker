@@ -4,7 +4,6 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from oauth2_provider.models import AccessToken
 from rest_framework import permissions, status
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
@@ -155,61 +154,6 @@ def driver_get_ready_orders(request):
 # POST
 # params: access_token, order_id
 
-
-@csrf_exempt
-def driver_pick_order(request):
-    access_token = AccessToken.objects.get(
-        token = request.POST.get("access_token"),
-        expires__gt = timezone.now()
-    )
-
-    driver = access_token.user.driver
-
-    if Order.objects.filter(driver = driver).exclude(
-            status = Order.ONTHEWAY and Order.DELIVERED):
-        return JsonResponse({
-            "status": "failed",
-            "error": "You can only pick one order at a time"
-        })
-    try:
-        order = Order.objects.get(
-            id = request.POST.get("order_id"),
-            driver = None,
-            status = Order.READY
-        )
-        order.driver = driver
-        order.status = Order.ONTHEWAY
-        order.picked_at = timezone.now()
-        order.save()
-
-        return JsonResponse({"status": "success", })
-
-    except Order.DoesNotExist:
-
-        return JsonResponse({
-            "status": "failed",
-            "error": "This order has been picked up"
-        })
-
-    return JsonResponse({})
-
-
-def driver_get_latest_order(request):
-    access_token = AccessToken.objects.get(
-        token = request.GET.get("access_token"),
-        expires__gt = timezone.now()
-    )
-
-    driver = access_token.user.driver
-
-    order = OrderSerializer(
-        Order.objects.filter(
-            driver = driver).order_by("picked_at").last()
-    ).data
-
-    return JsonResponse({"order": order})
-
-
 @csrf_exempt
 def driver_complete_order(request):
     driver = request.user.driver
@@ -256,23 +200,3 @@ def driver_get_revenue(request):
             order.total for order in orders)
 
     return JsonResponse({"revenue": revenue})
-
-
-# POST - params: access_token, "lat,lng"
-
-
-@csrf_exempt
-def driver_update_location(request):
-    if request.method == "POST":
-        access_token = AccessToken.objects.get(
-            token = request.POST.get("access_token"),
-            expires__gt = timezone.now()
-        )
-
-        driver = access_token.user.driver
-
-        # Set location string => database
-        driver.location = request.POST.get("location")
-        driver.save()
-
-        return JsonResponse({"status": "success"})
