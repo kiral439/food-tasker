@@ -14,8 +14,8 @@ from rest_framework.views import APIView
 
 from foodtaskerapp.pagination import PaginationHandlerMixin
 from .forms import RestaurantForm, UserFormForEdit
-from .models import Driver, Meal, Order, Restaurant, User
-from .serializers import MealSerializer, OrderSerializer, RestaurantSerializer, UserSerializer
+from .models import Driver, FoodType, Meal, Order, Restaurant, User
+from .serializers import FoodTypeSerializer, MealSerializer, OrderSerializer, RestaurantSerializer, UserSerializer
 
 
 ###############
@@ -102,6 +102,36 @@ class MeView(APIView):
         else:
             return JsonResponse({"error": {"restaurant": restaurant_serializer.errors, "user": user_serializer.errors}},
                                 status = status.HTTP_400_BAD_REQUEST)
+
+
+class FoodTypeView(APIView, PaginationHandlerMixin):
+    pagination_class = BasicPagination
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = FoodTypeSerializer
+
+    def post(self, request, *args, **kwargs):
+        food_type_serializer = FoodTypeSerializer(data = request.data)
+        food_type = FoodType.objects.filter(name = request.POST.get('name', None), restaurant = request.user.restaurant).last()
+
+        if food_type is None:
+            if food_type_serializer.is_valid():
+                food_type_serializer.save(restaurant = request.user.restaurant)
+                return JsonResponse({"success": "success"})
+            else:
+                return JsonResponse({"error": food_type_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
+        else:
+            return JsonResponse({"error": "You already have this food type"}, status = status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, *args, **kwargs):
+        instance = FoodType.objects.filter(
+            restaurant = request.user.restaurant).order_by("-id")
+        page = self.paginate_queryset(instance)
+        if page is not None:
+            serializer = self.get_paginated_response(
+                self.serializer_class(page, many = True, context = {"request": request}).data)
+        else:
+            serializer = self.serializer_class(instance, many = True)
+        return JsonResponse({"food_types": serializer.data})
 
 
 def restaurant_account(request):
@@ -194,6 +224,7 @@ class OrderView(APIView, PaginationHandlerMixin):
             serializer = self.serializer_class(instance, many = True)
         return JsonResponse({"orders": serializer.data})
 
+
 @permission_classes([permissions.IsAuthenticated])
 def restaurant_order(request):
     if hasattr(request.user, 'restaurant'):
@@ -228,6 +259,15 @@ class MealView(APIView, PaginationHandlerMixin):
         meal_serializer = MealSerializer(data = request.data)
         if meal_serializer.is_valid():
             meal_serializer.save(restaurant = request.user.restaurant)
+            return JsonResponse({"success": meal_serializer.data}, status = status.HTTP_201_CREATED)
+        else:
+            return JsonResponse({"error": meal_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        meal = Meal.objects.get(id = request.POST.get('meal_id', None))
+        meal_serializer = MealSerializer(meal, data = request.data, partial = True)
+        if meal_serializer.is_valid():
+            meal_serializer.update(instance = meal, validated_data = request.data)
             return JsonResponse({"success": meal_serializer.data}, status = status.HTTP_201_CREATED)
         else:
             return JsonResponse({"error": meal_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)

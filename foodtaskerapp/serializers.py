@@ -2,7 +2,7 @@ from djoser.compat import get_user_email, get_user_email_field_name
 from rest_framework import serializers
 
 from foodtasker import settings
-from .models import Restaurant, Meal, Customer, Driver, Order, OrderDetails, User
+from .models import Restaurant, Meal, Customer, Driver, Order, OrderDetails, User, FoodType
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
@@ -25,6 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (['id', 'first_name', "last_name", "email", "username"])
 
 
+class FoodTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoodType
+        fields = ('id', 'name')
+
+
 class MealSerializer(serializers.ModelSerializer):
     # image = serializers.SerializerMethodField()
     #
@@ -38,7 +45,12 @@ class MealSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meal
-        fields = ('id', 'name', 'short_description', 'image', 'price')
+        fields = ('id', 'name', 'short_description', 'image', 'price', 'food_type')
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['food_type'] = FoodTypeSerializer(instance.food_type).data
+        return response
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):

@@ -38,8 +38,26 @@ class Driver(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+
+class FoodType(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    name = models.CharField(max_length = 50)
+
+    def __str__(self):
+        return str(self.name)
+#
+#
+# class Categories(models.Model):
+#     # type = models.ForeignKey(FoodType, related_name = 'food_type', on_delete = models.CASCADE)
+#     name = models.CharField(max_length = 50)
+#
+#     def __str__(self):
+#         return str(self.name)
+
+
 class Meal(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    food_type = models.ForeignKey(FoodType, on_delete = models.CASCADE, default = 5, related_name = 'food_type')
     name = models.CharField(max_length=500)
     short_description = models.CharField(max_length=500)
     image = models.ImageField(upload_to='meal/images/', blank=False)
@@ -81,4 +99,5 @@ class OrderDetails(models.Model):
 
     def __str__(self):
         return str(self.id)
+
 

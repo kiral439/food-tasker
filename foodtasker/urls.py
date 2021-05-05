@@ -23,6 +23,8 @@ from foodtaskerapp import views, apis, restaurant_apis, customer_apis, drivers_a
 from .api import router
 
 urlpatterns = [
+    path('app', apis.app),
+    path('admin/', admin.site.urls),
     #Restaurant REST
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/users/', include('djoser.urls.base')),
@@ -33,11 +35,10 @@ urlpatterns = [
     path('api/v1/restaurants/me/', restaurant_apis.MeView.as_view()),
     path('api/v1/restaurant/register/', restaurant_apis.RegisterRestaurant.as_view()),
     path('api/v1/restaurants/report/<int:id>', restaurant_apis.restaurant_report),
-    path('app', apis.app),
-    path('admin/', admin.site.urls),
     path('', views.restaurant_home, name='restaurant-home'),
+    path('api/v1/restaurants/food-types/', restaurant_apis.FoodTypeView.as_view()),
 
-    #Customer REST
+                  #Customer REST
     path('api/v1/customers/register/', customer_apis.RegisterCustomer.as_view()),
     path('api/v1/customers/me/', customer_apis.MeView.as_view()),
     path('api/v1/customers/order/', customer_apis.customer_add_order),
